@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <string>
 #include <unistd.h>
-#include<Android/log.h>
+#include <Android/log.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -28,7 +28,9 @@ JNIEXPORT jstring JNICALL
 Java_com_tangsilian_antidebug_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
-    anti_debug04();
+//    anti_debug01();
+//    anti_debug02();
+//    anti_debug04();
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }

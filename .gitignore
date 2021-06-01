@@ -1,0 +1,10 @@
+.DS_Store
+.cxx/
+.gradle/
+.idea/
+gradle/
+gradlew
+gradlew.bat
+key/
+local.properties
+release/
