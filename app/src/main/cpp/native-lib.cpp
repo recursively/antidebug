@@ -20,7 +20,6 @@ void anti_debug04();
 void anti_debug05();
 void anti_debug06();
 void anti_debug07();
-void anti_debug08();
 unsigned long GetLibAddr();
 
 extern "C"
@@ -31,9 +30,80 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromJNI(
 //    anti_debug01();
 //    anti_debug02();
 //    anti_debug04();
-    std::string hello = "Hello from C++";
+    std::string hello = "The switches for anti-debugging interface.";
     return env->NewStringUTF(hello.c_str());
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromPtrace(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug01();
+    std::string hello = "Hello from Ptrace";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromTracerPid(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug02();
+    std::string hello = "Hello from TracerPid";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromCommonPort(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug03();
+    std::string hello = "Hello from CommonPort";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromFileDetection(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug04();
+    std::string hello = "Hello from FileDetection";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromBKPT(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug05();
+    std::string hello = "Hello from BKPT";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromInotify(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug06();
+    std::string hello = "Hello from Inotify";
+    return env->NewStringUTF(hello.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_tangsilian_antidebug_MainActivity_stringFromTimeLatency(
+        JNIEnv *env,
+        jobject /* this */) {
+    anti_debug07();
+    std::string hello = "Hello from TimeLatency";
+    return env->NewStringUTF(hello.c_str());
+}
+
 //方法一：附加到自身 让ida附加不上 无法实现调试
 void anti_debug01(){
     ptrace(PTRACE_TRACEME,0,0,0);
