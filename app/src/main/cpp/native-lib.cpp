@@ -106,7 +106,9 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromTimeLatency(
 
 //方法一：附加到自身 让ida附加不上 无法实现调试
 void anti_debug01(){
-    ptrace(PTRACE_TRACEME,0,0,0);
+    if(ptrace(PTRACE_TRACEME,0,0,0) < 0) {
+        LOGD("Don't trace me!\n");
+    }
     LOGD("%s","antidebug01 run");
 }
 //方法二：检测TracerPid的值 如果不为0 说明正在被调试
@@ -159,7 +161,7 @@ void anti_debug04(){
     LOGD("%s","read dir");
     DIR* dir;
     dir = opendir(rootPath);
-    LOGD("%s","read dir finsh");
+    LOGD("%s","read dir finish");
     if (dir!= NULL) {
         dirent *currentDir;
         while ((currentDir = readdir(dir)) != NULL) {
@@ -258,52 +260,45 @@ void anti_debug05(){
 
 //方法六：inotify检测
 void anti_debug06(){
+    int ret, len, i;
+    int pid = getpid();
+    LOGD("Pid: %d", pid);
     const int MAXLEN = 2048;
-    int ppid =getpid();
-    char buf[1024],readbuf[MAXLEN];
-    int pid, wd, ret,len,i;
-    int fd;
+    char buf[1024];
+    char readbuf[MAXLEN];
+    int fd, wd;
     fd_set readfds;
-    //防止调试子进程
-    ptrace(PTRACE_TRACEME, 0, 0, 0);
-    fd =  inotify_init();
-    sprintf(buf, "/proc/%d/maps",ppid);
-
-    //wd = inotify_add_watch(fd, "/proc/self/mem", IN_ALL_EVENTS);
+    fd = inotify_init();
+    sprintf(buf, "/proc/%d/maps", pid);
     wd = inotify_add_watch(fd, buf, IN_ALL_EVENTS);
     if (wd < 0) {
         LOGD("can't watch %s",buf);
         return;
     }
-    while (1) {
+//    while (1) {
         i = 0;
-        //注意要对fd_set进行初始化
-        FD_ZERO(&readfds);
-        FD_SET(fd, &readfds);
-        //第一个参数固定要+1，第二个参数是读的fdset，第三个是写的fdset，最后一个是等待的时间
-        //最后一个为NULL则为阻塞
-        //select系统调用是用来让我们的程序监视多个文件句柄的状态变化
-        ret = select(fd + 1, &readfds, 0, 0, 0);
-        if (ret == -1)
-            break;
+        FD_ZERO(&readfds); // 使得readfds清零
+        FD_SET(fd, &readfds); // 将fd加入readfds集合
+        LOGD("flag 1");
+        ret = select(fd + 1, &readfds, NULL, NULL, NULL);
+        LOGD("flag 2");
+        if (ret == -1) {
+            return;
+        }
+        LOGD("flag 3");
         if (ret) {
-            len = read(fd,readbuf,MAXLEN);
-            while(i < len){
-                //返回的buf中可能存了多个inotify_event
-                struct inotify_event *event = (struct inotify_event*)&readbuf[i];
-                LOGD("event mask %d\n",(event->mask&IN_ACCESS) || (event->mask&IN_OPEN));
-                //这里监控读和打开事件
-                if((event->mask&IN_ACCESS) || (event->mask&IN_OPEN)){
-                    LOGD("kill!!!!!\n");
-                    //事件出现则杀死父进程
-                    int ret = kill(ppid,SIGKILL);
-                    LOGD("ret = %d",ret);
+            len = read(fd, readbuf, MAXLEN);
+            while (i < len) {
+                struct inotify_event *event = (struct inotify_event *) &readbuf[i];
+                if ((event->mask & IN_ACCESS) || (event->mask & IN_OPEN)) {
+                    LOGD("Killing...");
+//                    int ret = kill(pid, SIGKILL);
                     return;
                 }
-                i+=sizeof (struct inotify_event) + event->len;
+                i += sizeof(struct inotify_event) + event->len;
             }
         }
-    }
+//    }
     inotify_rm_watch(fd,wd);
     close(fd);
 }
@@ -320,7 +315,8 @@ void anti_debug07()
     gettimeofday(&t2, &tz);
     int timeoff = (t2.tv_sec) - (t1.tv_sec);
     if (timeoff > 1) {
-        int ret = kill(pid, SIGKILL);
+        LOGD("Time latency is abnormal.\n");
+//        int ret = kill(pid, SIGKILL);
         return ;
     }
 }
