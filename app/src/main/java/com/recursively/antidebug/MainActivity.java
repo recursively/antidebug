@@ -1,4 +1,4 @@
-package com.tangsilian.antidebug;
+package com.recursively.antidebug;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

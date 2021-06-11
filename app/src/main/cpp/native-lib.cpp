@@ -24,7 +24,7 @@ unsigned long GetLibAddr();
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromJNI(
+Java_com_recursively_antidebug_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
 //    anti_debug01();
@@ -36,7 +36,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromJNI(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromPtrace(
+Java_com_recursively_antidebug_MainActivity_stringFromPtrace(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug01();
@@ -46,7 +46,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromPtrace(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromTracerPid(
+Java_com_recursively_antidebug_MainActivity_stringFromTracerPid(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug02();
@@ -56,7 +56,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromTracerPid(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromCommonPort(
+Java_com_recursively_antidebug_MainActivity_stringFromCommonPort(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug03();
@@ -66,7 +66,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromCommonPort(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromFileDetection(
+Java_com_recursively_antidebug_MainActivity_stringFromFileDetection(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug04();
@@ -76,7 +76,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromFileDetection(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromBKPT(
+Java_com_recursively_antidebug_MainActivity_stringFromBKPT(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug05();
@@ -86,7 +86,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromBKPT(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromInotify(
+Java_com_recursively_antidebug_MainActivity_stringFromInotify(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug06();
@@ -96,7 +96,7 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromInotify(
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_tangsilian_antidebug_MainActivity_stringFromTimeLatency(
+Java_com_recursively_antidebug_MainActivity_stringFromTimeLatency(
         JNIEnv *env,
         jobject /* this */) {
     anti_debug07();
@@ -108,6 +108,9 @@ Java_com_tangsilian_antidebug_MainActivity_stringFromTimeLatency(
 void anti_debug01(){
     if(ptrace(PTRACE_TRACEME,0,0,0) < 0) {
         LOGD("Don't trace me!\n");
+//        int pid=getpid();
+//        int ret=kill(pid,SIGKILL);
+//        exit(1);
     }
     LOGD("%s","antidebug01 run");
 }

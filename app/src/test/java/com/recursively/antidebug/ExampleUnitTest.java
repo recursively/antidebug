@@ -1,4 +1,4 @@
-package com.tangsilian.antidebug;
+package com.recursively.antidebug;
 
 import org.junit.Test;
 
